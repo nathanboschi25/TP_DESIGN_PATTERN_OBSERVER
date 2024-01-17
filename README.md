@@ -3,7 +3,10 @@
 ## Introduction
 
 You're working for Google and you have to implement the notification system for YouTube. You can download 'basic
-sources' [here]().
+sources' with the following command:
+```shell
+git clone https://github.com/nathanboschi25/TP_DESIGN_PATTERN_OBSERVER.git
+```
 
 ## Version 1 - Basic
 
