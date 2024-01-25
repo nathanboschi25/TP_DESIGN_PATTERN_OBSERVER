@@ -1,96 +1,82 @@
-# Observer Pattern Lab
+# TP - Observer Pattern
 
 ## Introduction
 
-You're working for Google and you have to implement the notification system for YouTube. You can download 'basic
-sources' with the following command:
+Vous travaillez pour Google et vous devez implémenter le système de notification pour YouTube. Vous pouvez télécharger la structure de base avec la commande suivante :
 ```shell
 git clone https://github.com/nathanboschi25/TP_DESIGN_PATTERN_OBSERVER.git
 ```
 
-## Version 1 - Basic
+## Version 1 - Bases
 
-The basic idea is that a user (`Subscrber` -> `Observer`) can subscribe to a channel (`Youtuber` -> `Subject`) and
-receive notifications when a new video is uploaded.
-**Foreach notification, the Subscriber prints his name and the notification.**
+L'idée de base est qu'un utilisateur (`Subscrber` -> `Observer`) peut s'abonner à une chaîne (`Youtuber` -> `Subject`) et recevoir des notifications lorsqu'une nouvelle vidéo est mise en ligne.
+**Pour chaque notification, le Subscriber affiche son nom et la notification.**
 
-**Texts below are not exhaustive, fields and methods developed below are those which deserve to be detailed. To complete
-the lab in full, refer to the UML diagram at the end of this section.**
+**Les descriptions ci-dessous ne sont pas exhaustives, les détails présentés sont ceux qui méritent une explication supplémentaire. Pour compléter le TP en entier, référez-vous au diagramme UML à la fin de cette section.**
 
-### Suscriber
+### Subscriber
 
-- `update(Youtuber context)` : the action to do when the `Subject` notifies the `Observer`. In this case, the name of
-  the video is
-  printed.
+- `update(Youtuber context)` : l'action à faire lorsque le `Subject` notifie l'`Observer`. Dans ce cas, le nom de la
+  vidéo est affiché.
+
 
 ### Youtuber
 
-- `lastVideo` : the name of the last video uploaded
-- `suscribers` : the list of `Observers` that subscribed to the `Subject`. It is a list of `Subscriber`.
-- `subscribe(Subscriber subscriber)` and `unsubscribe(Subscriber subscriber)` : add or remove a `Subscriber` from the
-  subscribers list.
-- `notifyObservers()` : notify all the subscribers that a new video has been uploaded. It calls the `update()` method of
-  each
-  `Subscriber`.
-- `uploadVideo(String videoName)` : upload a new video and notify all the subscribers.
+- `lastVideo` : le nom de la dernière vidéo mise en ligne.
+- `suscribers` : la liste des `Observers` qui se sont abonnés au `Subject`. C'est une liste de `Subscriber`.
+- `subscribe(Subscriber subscriber)` et `unsubscribe(Subscriber subscriber)` : ajoute ou retire un `Subscriber` de la
+  liste des abonnés.
+- `notifyObservers()` : notifie tous les abonnés qu'une nouvelle vidéo a été mise en ligne. Cela appelle la méthode `update()` de
+  chaque `Subscriber`.
+- `uploadVideo(String videoName)` : met en ligne une nouvelle vidéo et notifie tous les abonnés.
 
-Here is the UML diagram of the first version:
+
+Vous trouverez ci-dessous le diagramme UML de la première version :
 ![UML](./s3alt/ObserverPatternV1/package.png)
 
-## Version 2 - Notification types
+## Version 2 - Types de notifications
 
-In this version, we want to be able to emit different types of notifications. Foreach notification, this step would
-allow us to make different actions depending on the type of notification.
+Dans cette version, nous voulons pouvoir émettre différents types de notifications. Pour chaque notification, cette étape nous permettra de faire différentes actions en fonction du type de notification.
 
-**Texts below are not exhaustive, fields and methods developed below are those which deserve to be detailed. To complete
-the lab in full, refer to the UML diagram at the end of this section.**
+**Les descriptions ci-dessous ne sont pas exhaustives, les détails présentés sont ceux qui méritent une explication supplémentaire. Pour compléter le TP en entier, référez-vous au diagramme UML à la fin de cette section.**
 
 ### NotificationTypes
 
-`NEW_VIDEO`, `LIVE_STARTED`, `LIVE_ENDED` are the different types of notifications that we can emit in this example.
+`NEW_VIDEO`, `LIVE_STARTED`, `LIVE_ENDED` sont les types de notifications utilisés dans ce TP.
 
-**You need to update the `Suscriber::update()`, `Youtuber::notifyObservers()` and `Youtuber::uploadVideo()` methods to
-take into account the notification type.**
+**Vous devez mettre à jour les méthodes `Suscriber::update()`, `Youtuber::notifyObservers()` et `Youtuber::uploadVideo()` pour prendre en compte le type de notification.**
+
 
 ### Youtuber
 
-- `isLive` : a boolean that indicates if the youtuber is currently live or not.
-- `goLive()` and `endLive()` : methods to start and end a live. They notify the subscribers that the youtuber is live or
-  not.
-- `notifyObservers(NotificationTypes notificationType)` : notify all the subscribers that a new video has been uploaded.
-  It calls the `update()` method of each
-  `Subscriber` with the notification type as parameter.
+- `isLive` : un booléen qui indique si le youtuber est en live ou non.
+- `goLive()` and `endLive()` : met le booléen `isLive` à `true` ou `false` et notifie les abonnés.
+- `notifyObservers(NotificationTypes notificationType)` : notifie tous les abonnés d'un événement. Cela appelle la méthode `update(NotificationTypes notificationType)` de chaque `Subscriber` avec le type de notification en paramètre.
 
 ### Suscriber
 
-- `update(Youtuber context, NotificationTypes notificationType)` : the action to do when the `Subject` notifies
-  the `Observer`. You need to differentiate the actions depending on the notification type (e.g. print the name of the
-  video if the notification type is `NEW_VIDEO` and print "The youtuber {name} is live" if the notification type
-  is `LIVE_STARTED`...)
+- `update(Youtuber context, NotificationTypes notificationType)` : l'action à faire lorsque le `Subject` notifie
+  l'`Observer`. Vous devez différencier les actions en fonction du type de notification (par exemple, afficher le nom
+  de la vidéo si le type de notification est `NEW_VIDEO` et afficher "Le youtuber {nom} est en live" si le type de
+  notification est `LIVE_STARTED`...)
 
-Here is the UML diagram of the second version:
+
+Vous trouverez ci-dessous le diagramme UML de la deuxième version :
 ![UML](./s3alt/ObserverPatternV2/package.png)
 
-## Version 3 - Notification types selection
+## Version 3 - Abonnements personnalisés
 
-In this version, we want to be able to subscribe to different types of notifications. Foreach notification, this step
-would allow us to make different actions depending on the type of notification and send only the notifications that the
-subscriber wants to receive.
-This version force us to change the `suscribers` list of the `Youtuber` class. It is now a
-map : `Map<Suscriber, List<NotificationTypes>>`.
+Dans cette version, nous voulons pouvoir nous abonner à différents types de notifications. Pour chaque notification, cette étape nous permettra de faire différentes actions en fonction du type de notification et d'envoyer uniquement les notifications que l'abonné souhaite recevoir.
+Cette version nous force à modifier la liste des abonnés de la classe `Youtuber`. C'est maintenant une map : `Map<Suscriber, List<NotificationTypes>>`.
 
-**Texts below are not exhaustive, fields and methods developed below are those which deserve to be detailed. To complete
-the lab in full, refer to the UML diagram at the end of this section.**
+**Les descriptions ci-dessous ne sont pas exhaustives, les détails présentés sont ceux qui méritent une explication supplémentaire. Pour compléter le TP en entier, référez-vous au diagramme UML à la fin de cette section.**
 
 ### Youtuber
 
-- `subscribe(Subscriber subscriber, List<NotificationTypes> notificationTypes)` : add a `Subscriber` to the subscribers
-  list **with the list of notification types that he wants to receive**.
-- `notifyObservers(NotificationTypes notificationType)` : notify all the subscribers that a new video has been uploaded.
-  It calls the `update()` method of each
-  `Subscriber` with the notification type as parameter. **You need to check if the subscriber wants to receive this
-  notification type.**'
+- `subscribe(Subscriber subscriber, List<NotificationTypes> notificationTypes)` : ajoute un `Subscriber` à la liste des
+  abonnés **avec les types de notifications qu'il souhaite recevoir**.
+- `notifyObservers(NotificationTypes notificationType)` : notifie tous les abonnés d'un événement. Cela appelle la méthode `update(NotificationTypes notificationType)` de chaque `Suscriber` qui souhaite recevoir ce type de notification.
 
-Here is the UML diagram of the third version:
+Vous trouverez ci-dessous le diagramme UML de la troisième version :
 ![UML](./s3alt/ObserverPatternV3/package.png)
 
